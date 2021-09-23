@@ -6,9 +6,9 @@ s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
 
-    bucket = 'lambda-datajson-bucket'
+    bucket = event['Records'][0]['s3']['bucket']['name']
 
-    key = 'data.json'
+    key = event['Records'][0]['s3']['object']['key']
 
     response = s3.get_object(Bucket=bucket, Key=key)
 
@@ -20,7 +20,5 @@ def lambda_handler(event, context):
 
     for record in transactions:
       if record['transactionType']=='REFUND':
-        print("TransactionType: " + record['transactionType'])
-        print("TransactionAmount: " + str(record['amount']))
-
-    print(jsonObject)
+          print("TransactionType: " + record['transactionType'])
+          print("TransactionAmount: " + str(record['amount']))
